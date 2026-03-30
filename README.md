@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="doubleham.png" alt="DOUBLEHAM" width="220" />
+  <img src="doubleham.png" alt="DOUBLEHAM" width="820" />
 </div>
 
 # DOUBLEHAM
