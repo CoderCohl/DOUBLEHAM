@@ -1,53 +1,84 @@
+
+````md
 <div align="center">
-  <img src="chaos.png" alt="BagsChaosBot" width="220" />
+  <img src="doubleham.png" alt="DOUBLEHAM" width="220" />
 </div>
 
-# BagsChaosBot
+# DOUBLEHAM
 
-A fee-funded, opt-in chaos agent for Bags.
+A double-layer mayhem engine for pump.fun.
 
 This project is a reference implementation of a "Mayhem style" automated participant that:
 
 - Uses a public, doxxed wallet
-- Claims protocol fees attributable to that wallet
-- Recycles claimed fees back into eligible launches through automated buys
-- Applies explicit safety gates to avoid reinforcing unhealthy holder concentration
-- Leaves an auditable trail of actions in a local database
+- Executes randomized and reactive buy behavior
+- Amplifies market activity through layered feedback loops
+- Optionally recycles fees into additional chaos
+- Leaves an auditable trail of all actions
 
-The design goal is simple: **if a project opts into chaos by routing a portion of its fees to the bot wallet, the bot converts that fee stream into automated market participation.**
+The design goal is simple:
+
+**create visible, continuous, and reactive on-chain activity that feeds itself**
+
+---
 
 ## What this is not
 
-- Not profit sharing
-- Not a yield product
-- Not a promise to support every launch
-- Not a guarantee of price impact
-- Not an attempt to hide behavior
+- Not a profit strategy
+- Not optimized trading
+- Not a yield system
+- Not predictable
+- Not designed to be efficient
 
-This is infrastructure. It is intentionally mechanical.
+This is an engine for chaos.
+
+---
+
+## What is DOUBLE MAYHEM
+
+Mayhem is not just buying.
+
+It is:
+- irregular activity
+- unpredictable timing
+- bursts of volume
+- visible interaction with the chart
+
+DOUBLEHAM adds a second layer.
+
+It does not just create chaos.
+
+It reacts to its own chaos and amplifies it.
+
+---
 
 ## High level model
 
-Projects on Bags can route a portion of protocol fees to arbitrary recipients.
+The system runs two interacting loops:
 
-If a project includes the chaos wallet as a recipient:
+1. Base Mayhem Loop  
+2. Amplification Loop  
 
-- The chaos wallet accrues claimable fees over time
-- The bot periodically claims those fees
-- The bot uses the claimed SOL as a bounded budget to place buys on new launches that opted in
-- The bot may abstain if distribution is too concentrated
+```txt
+activity → attention → volume → triggers → more activity
+                     ↑
+              amplification layer
+````
 
-In other words, the bot is a fee-funded volatility recycler.
+This creates a recursive system.
+
+---
 
 ## Repository layout
 
 ```
 .
 ├─ src/
-│  ├─ bags/                 # Bags API client + type contracts
-│  ├─ engine.ts             # Main polling and execution loop
-│  ├─ strategy.ts           # Buy sizing logic from fee allocation
-│  ├─ risk.ts               # Holder distribution gates
+│  ├─ engine.ts             # Main loop controller
+│  ├─ mayhem.ts             # Base randomized execution
+│  ├─ amplify.ts            # Reactive burst logic
+│  ├─ strategy.ts           # Buy sizing + randomness
+│  ├─ risk.ts               # Optional safety gates
 │  ├─ db.ts                 # SQLite persistence
 │  └─ cli.ts                # Entry point
 ├─ .env.example
@@ -55,39 +86,177 @@ In other words, the bot is a fee-funded volatility recycler.
 └─ tsconfig.json
 ```
 
-## Requirements
+---
 
-- Node.js 18+
-- A Bags API endpoint you can query
-- A Solana RPC endpoint (used for confirmation in some deployments)
-- A doxxed chaos wallet public key
-- A local keypair for signing (keep private key out of git)
+## Core concepts
 
-This repo intentionally avoids hardcoding undocumented Bags endpoints. The HTTP client is production shaped, but you must map the paths to the actual Bags routes you are using.
+### 1) Base Mayhem Loop
+
+This creates constant background activity.
+
+Behavior:
+
+* random time intervals
+* random buy sizes
+* optional multi-wallet execution
+
+```ts
+while (active) {
+  await sleep(random(minDelay, maxDelay))
+  const size = random(minBuy, maxBuy)
+  executeBuy(size)
+}
+```
+
+This ensures the chart never feels idle.
+
+---
+
+### 2) Amplification Loop (Double Layer)
+
+This is what makes DOUBLEHAM.
+
+The system watches for signals:
+
+* buy spikes
+* sudden volume changes
+* inactivity gaps
+* external buys
+
+When triggered:
+
+```ts
+if (spikeDetected) {
+  executeBurst(nBuys, variableSizes)
+}
+
+if (inactivityDetected) {
+  injectNoise()
+}
+```
+
+The system reacts, not just schedules.
+
+---
+
+### 3) Budget Model (optional)
+
+If connected to a fee wallet:
+
+* claim fees
+* treat as execution budget
+* recycle into buys
+
+```txt
+fees → buys → activity → more fees → more buys
+```
+
+If no fees exist, the system can still run with a fixed budget.
+
+---
+
+### 4) Buy Sizing
+
+Buy sizes are not fixed.
+
+They are:
+
+* randomized within bounds
+* optionally scaled by activity level
+* capped for safety
+
+Example:
+
+```ts
+const base = random(minBuy, maxBuy)
+const multiplier = activityLevel()
+const size = Math.min(base * multiplier, maxBuyCap)
+```
+
+---
+
+### 5) Double Mayhem Behavior
+
+Normal bots:
+
+* linear
+* predictable
+* time-based
+
+DOUBLEHAM:
+
+* layered
+* reactive
+* feedback-driven
+
+```txt
+Layer 1 → constant noise
+Layer 2 → reactive bursts
+```
+
+Result:
+
+* continuous movement
+* perceived momentum
+* unpredictable chart behavior
+
+---
+
+### 6) Optional Risk Gates
+
+The system can abstain if conditions are unhealthy.
+
+Examples:
+
+* high holder concentration
+* low liquidity
+* abnormal price impact
+
+This is configurable and optional.
+
+---
+
+## Engine behavior
+
+Each cycle:
+
+1. Check balance or claim fees
+2. Run base mayhem loop
+3. Scan for triggers
+4. Execute amplification bursts
+5. Log all actions
+
+Actions are stored:
+
+```sql
+CREATE TABLE actions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts INTEGER NOT NULL,
+  action TEXT NOT NULL,
+  amount_sol REAL NOT NULL,
+  reason TEXT NOT NULL,
+  tx_sig TEXT
+);
+```
+
+Everything is auditable.
+
+---
 
 ## Configuration
 
-Copy `.env.example` to `.env` and fill in values.
+```
+MIN_BUY=0.01
+MAX_BUY=0.2
+MIN_DELAY=5
+MAX_DELAY=45
+BURST_COUNT=5
+BURST_MULTIPLIER=2
+INACTIVITY_THRESHOLD=60
+MAX_SOL_PER_BUY=0.25
+```
 
-Key parameters:
-
-- `BAGS_API_BASE_URL`  
-  Base URL for the Bags API.
-
-- `CHAOS_WALLET_PUBKEY`  
-  Public wallet address for the bot. This wallet should be doxxed publicly.
-
-- `POLL_INTERVAL_MS`  
-  How often the bot checks for new launches.
-
-- `MIN_SOL_BALANCE`  
-  Minimum claimable fee threshold before attempting actions.
-
-- `MAX_SOL_PER_BUY`  
-  Absolute cap per buy. This exists to prevent runaway execution.
-
-- `ALLOWLIST` and `DENYLIST`  
-  Optional comma separated mint address lists.
+---
 
 ## Running
 
@@ -97,289 +266,108 @@ Install:
 npm install
 ```
 
-Development run:
+Run:
 
 ```bash
 npm run dev
 ```
 
-Build and run:
-
-```bash
-npm run build
-npm start
-```
-
-Logs are JSON by default. If you want human readable logs:
-
-```bash
-npm run dev | npx pino-pretty
-```
-
-## Core concepts
-
-### 1) Eligibility: opt-in fee split
-
-The bot does not buy every coin. It only considers coins that explicitly opted in by including the chaos wallet as a fee recipient.
-
-The bot queries a fee split document for each new mint:
-
-```ts
-type FeeRecipient = { wallet: string; bps: number };
-type FeeSplit = { mint: string; recipients: FeeRecipient[] };
-```
-
-If `bps` for the chaos wallet is zero, the mint is ignored.
-
-### 2) Budget: claim and recycle
-
-The bot treats claimable fees as a global budget.
-
-At the start of each tick:
-
-1. Fetch claimable fees for the chaos wallet
-2. If below `MIN_SOL_BALANCE`, do nothing
-3. Claim fees
-4. Use the claimed amount as `budgetSol` for the tick
-5. Spend the budget across eligible mints, bounded by `MAX_SOL_PER_BUY`
-
-This is an explicit anti-extraction posture. If the bot receives more fees, it can be more active. If it receives no fees, it cannot do anything.
-
-### 3) Aggression: fee allocation -> execution curve
-
-Each mint can allocate different bps to the chaos wallet.
-
-Higher bps should translate into more aggressive market participation, but should not scale linearly forever. A logistic curve is used:
-
-- Sensitive at low to mid allocations
-- Saturates as allocation becomes large
-- Always clamped to safety limits
-
-Implementation:
-
-```ts
-const x = Math.min(1, allocBps / 1000);
-const logistic = 1 / (1 + Math.exp(-curveK * (x - 0.5)));
-const sol = baseSol + logistic * (maxSol - baseSol);
-const bounded = Math.min(sol, maxSolPerBuy, claimableSol);
-```
-
-This turns "I routed 0.5%" into a meaningful difference vs "I routed 0.05%", while preventing 10% allocations from forcing absurd buy sizes.
-
-### 4) Risk: holder distribution gates
-
-The bot can optionally abstain if holder distribution is unhealthy.
-
-This repo implements a minimal, explicit gate:
-
-- `top1` share
-- `top5` share
-- HHI (Herfindahl-Hirschman Index)
-
-Definitions:
-
-- `topN = sum(pct_i for i in top N holders)`
-- `HHI = sum(pct_i^2 for all holders)`
-
-Example thresholds (defaults in `engine.ts`):
-
-- `top1 <= 0.12`
-- `top5 <= 0.35`
-- `hhi <= 0.10`
-
-These values are conservative and should be tuned to the Bags environment.
-
-Why this exists:
-
-- If the earliest holders already control most of supply, buying into that is more likely to amplify a single wallet outcome than to create a distributed market.
-- The bot is meant to be opt-in chaos, not a concentration multiplier.
-
-### 5) Ordering: newest first
-
-When multiple launches are discovered in a tick, the bot processes newest first.
-
-Rationale:
-
-- Chaos is intended to create early activity
-- Older launches already have organic distribution dynamics
-- The fee-funded budget is finite, so spend it where it matches intent
-
-## Engine behavior
-
-The engine uses a polling loop:
-
-1. Load `last_seen_ms` from SQLite
-2. Query new launches since last seen
-3. Update `last_seen_ms` to the newest `createdAt`
-4. Claim fees (if threshold met)
-5. For each launch:
-   - Check allow/deny list
-   - Fetch fee split
-   - Skip if chaos wallet not present
-   - Fetch holders
-   - Skip if risk gate fails
-   - Plan buy size from allocation
-   - Fetch quote
-   - Buy with SOL
-   - Persist action result to SQLite
-
-Actions are stored for audit:
-
-```sql
-CREATE TABLE actions (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  ts INTEGER NOT NULL,
-  mint TEXT NOT NULL,
-  action TEXT NOT NULL,
-  amount_sol REAL NOT NULL,
-  reason TEXT NOT NULL,
-  tx_sig TEXT
-);
-```
-
-This gives you a durable, queryable timeline of what happened and why.
-
-## API adapter contract
-
-This repo includes an HTTP client with the correct shape, but you must map it to real Bags endpoints.
-
-Interface:
-
-```ts
-export interface BagsClient {
-  listNewLaunches(sinceMs: number, limit: number): Promise<Launch[]>;
-  getClaimableFees(wallet: string): Promise<Fees>;
-  claimFees(params: { wallet: string }): Promise<{ claimedSol: number }>;
-  getFeeSplit(mint: string): Promise<FeeSplit>;
-  getHolders(mint: string, limit: number): Promise<Holder[]>;
-  getQuote(mint: string): Promise<MarketQuote>;
-  buyWithSol(params: {
-    mint: string;
-    solAmount: number;
-    slippageBps: number;
-    payerPubkey: string;
-  }): Promise<{ signature: string }>;
-}
-```
-
-If Bags requires transaction signing, you typically have one of these patterns:
-
-### Pattern A: API returns a transaction to sign
-
-- Client requests a buy
-- API responds with a base64 serialized transaction
-- Bot signs with its keypair
-- Bot sends the transaction via Solana RPC
-- Bot returns signature
-
-### Pattern B: API submits on behalf of the wallet
-
-- API holds custody or a session for the wallet
-- Bot authenticates to API
-- API submits transactions
-
-This repo defaults to Pattern B in the interface for simplicity, but you can implement Pattern A by extending `buyWithSol` to return `transactionBase64` instead of `signature`, then adding a signer module.
+---
 
 ## Observability
 
-Minimal observability is included:
+Included:
 
-- Structured logs via `pino`
-- Persistent action records in SQLite
+* structured logs
+* SQLite action history
 
-Suggested production additions:
+Recommended:
 
-- Export Prometheus counters: buys attempted, buys succeeded, skips by reason
-- Add a "dry run" mode that logs plans without executing buys
-- Add a heartbeat endpoint for deployment health checks
+* metrics dashboard
+* dry-run mode
+* trigger visibility
 
-## Safety and controls
+---
 
-You should treat this as an agent that can spend SOL.
+## Design principles
 
-Recommended controls:
+Inspectable
+All logic is visible and modular.
 
-- Keep `MAX_SOL_PER_BUY` low until you validate behavior
-- Set `MIN_SOL_BALANCE` to avoid constant micro-spam actions
-- Add a global daily spend cap (not implemented here)
-- Add a per-mint cooldown window (not implemented here)
-- Use allowlist mode for initial testing
+Understandable
+No hidden behavior.
 
-## Threat model and abuse cases
+Extendable
+New triggers and strategies can be added easily.
 
-This section is explicit because chaos bots attract adversarial thinking.
+---
 
-### Abuse: spoofed fee splits
+## Why it works
 
-If an attacker can forge fee split data through the API, they can trick the bot into buying.
+Markets react to activity.
+
+Not logic.
+
+DOUBLEHAM creates:
+
+* visible movement
+* constant interaction
+* perceived urgency
+
+It exploits:
+
+* attention
+* momentum perception
+* behavioral reactions
+
+---
+
+## Threat model
+
+This system is intentionally chaotic.
+
+Risks include:
+
+* overbuying
+* poor timing
+* amplification of bad conditions
 
 Mitigation:
 
-- Only trust fee split data from authoritative, signed sources
-- Prefer on-chain derived fee split state if possible
-- Add allowlist mode for production
+* strict caps
+* cooldowns
+* optional gates
 
-### Abuse: holder list manipulation
+---
 
-If holder data is incomplete or stale, risk gates can be bypassed.
+## Roadmap
 
-Mitigation:
+* multi-wallet swarm mode
+* adaptive burst intelligence
+* on-chain trigger signals
+* UI dashboard
+* cross-token routing
 
-- Fetch holders from a reliable indexer
-- Validate that holder percentages sum to a reasonable total
-- Increase holder sample size
-- Add additional gates based on liquidity or trading volume
+---
 
-### Abuse: quote spoofing
+## TLDR
 
-If quote is incorrect, buy sizing can become unsafe.
+DOUBLEHAM creates chaos.
 
-Mitigation:
+Then reacts to it.
 
-- Validate quote ranges
-- Add a max price impact gate
-- Cross-check with a second quote source if available
+Then doubles it.
 
-## Development notes
-
-### Tests
-
-`vitest` is included with small unit tests for:
-
-- Risk calculations
-- Buy planning curve
-
-Run:
-
-```bash
-npm test
-```
-
-### Database
-
-SQLite is used intentionally:
-
-- Local, no infra required
-- Durable state across restarts
-- Easy to inspect with any SQLite browser
-
-## Operational playbook
-
-Suggested rollout:
-
-1. Run in allowlist mode on a small set of test mints
-2. Set low caps: `MAX_SOL_PER_BUY=0.02`, `MIN_SOL_BALANCE=0.05`
-3. Verify fee claiming works and budget equals expected SOL
-4. Observe action table for correctness
-5. Increase caps slowly
-6. Remove allowlist once behavior is stable
-
-## License
-
-MIT. See `LICENSE`.
+---
 
 ## Disclaimer
 
-This repository is provided for educational and experimental purposes.
+This repository is experimental.
 
-Automated trading agents can lose funds. You are responsible for any deployment, configuration, and compliance obligations.
+Automated systems can lose funds.
+
+You are responsible for all deployment and usage.
+
+```
+
+---
